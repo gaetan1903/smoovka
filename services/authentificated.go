@@ -67,6 +67,7 @@ func UserGetAccount() map[string]interface{} {
 	return map[string]interface{}{
 		"id":          user.ID,
 		"displayName": user.Name,
+		"login":       user.Login,
 		"email":       user.Email,
 		"photoURL": fmt.Sprintf(
 			"/assets/images/avatars/avatar_%d.jpg", user.ID%25+1,
