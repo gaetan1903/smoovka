@@ -3,16 +3,14 @@ package main
 import (
 	"embed"
 	"log"
-	"os"
-	"smoovka/models"
+
+	"smoovka/services"
 
 	"github.com/joho/godotenv"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/linux"
-	"gorm.io/driver/sqlserver"
-	"gorm.io/gorm"
 )
 
 //go:embed all:frontend/dist
@@ -25,7 +23,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, err = init_db()
+	_, err = services.InitDb()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,16 +57,4 @@ func main() {
 		println("Error:", err.Error())
 	}
 
-}
-
-func init_db() (db *gorm.DB, err error) {
-	db, err = gorm.Open(sqlserver.Open(os.Getenv("DSN_URL")), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.Session{})
-	db.AutoMigrate(&models.Pause{})
-
-	return db, nil
 }

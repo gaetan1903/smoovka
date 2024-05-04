@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"smoovka/services"
 )
 
 // App struct
@@ -20,6 +21,10 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *App) UserisLoggedIn() bool {
-	return true
+func (a *App) UserIsLoggedIn() bool {
+	return services.UserIsLoggedIn()
+}
+
+func (a *App) UserLogin(login string, password string) bool {
+	return services.UserLogin(login, password)
 }

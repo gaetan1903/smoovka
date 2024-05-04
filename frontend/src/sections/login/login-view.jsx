@@ -27,9 +27,31 @@ export default function LoginView() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const handleClick = async () => {
+    setError(null);
+    // get username and password from form
+    const login = document.querySelector('input[name="login"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+
+    if (!login || !password) {
+      setError('Remplir tous les champs svp');
+      return;
+    }
+
+    try {
+      const response = await window.go.main.App.UserLogin(login, password);
+      if (response) {
+        router.replace('/');
+        router.reload();
+      } else {
+        setError('Login ou mot de passe incorrect');
+      }
+    } catch (err) {
+      console.error('Error logging in:', err);
+      setError('Une erreur s\'est produite');
+    }
   };
 
   const renderForm = (
@@ -51,6 +73,12 @@ export default function LoginView() {
             ),
           }}
         />
+
+        {error && (
+          <Typography variant="subtitle2" sx={{ color: 'error.main' }}>
+            {error}
+          </Typography>
+        )}
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
@@ -98,13 +126,14 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Smoovka is ready for you</Typography>
+          <Typography variant="h4">Smoovka is ready for you 💥 </Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Pas encore de compte
             <Link variant="subtitle2" sx={{ ml: 0.5 }}>
-              Let’s smoovka
+              Let’s Smoovka
             </Link>
+            🤭
           </Typography>
 
 

@@ -7,8 +7,8 @@ import (
 type User struct {
 	ID        uint `gorm:"primaryKey"`
 	Name      string
-	Email     *string `gorm:"index"`
-	Password  string
+	Login     string `gorm:"index"`
+	Email     *string
 	Birthday  *time.Time
 	Admin     bool
 	CreatedAt time.Time `gorm:"autoCreateTime"`

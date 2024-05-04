@@ -16,7 +16,7 @@ export default function Router() {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const logged = await window.go.main.App.UserisLoggedIn();
+        const logged = await window.go.main.App.UserIsLoggedIn();
         setIsAuthenticated(logged);
       } catch (error) {
         console.error("Error checking authentication:", error);

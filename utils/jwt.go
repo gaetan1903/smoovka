@@ -7,7 +7,7 @@ import (
 )
 
 // create a new JWT token
-func CreateToken(user int64) string {
+func CreateToken(user uint) string {
 	claims := jwt.MapClaims{
 		"userID": user,
 	}
