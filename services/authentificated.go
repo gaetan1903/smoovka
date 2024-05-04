@@ -30,6 +30,10 @@ func UserLogin(login string, password string) bool {
 	return err == nil
 }
 
+func UserLogout() {
+	utils.SetPreference("token", "")
+}
+
 func UserIsLoggedIn() bool {
 	token := utils.GetPreference("token")
 	log.Println("token", token)

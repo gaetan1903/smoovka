@@ -6,3 +6,5 @@ export function UserGetAccount():Promise<{[key: string]: any}>;
 export function UserIsLoggedIn():Promise<boolean>;
 
 export function UserLogin(arg1:string,arg2:string):Promise<boolean>;
+
+export function UserLogout():Promise<void>;

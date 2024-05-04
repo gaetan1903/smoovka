@@ -30,6 +30,10 @@ func (a *App) UserLogin(login string, password string) bool {
 	return services.UserLogin(login, password)
 }
 
+func (a *App) UserLogout() {
+	services.UserLogout()
+}
+
 // ------------------------
 
 // DASHBOARD

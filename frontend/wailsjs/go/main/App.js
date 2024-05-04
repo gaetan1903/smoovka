@@ -13,3 +13,7 @@ export function UserIsLoggedIn() {
 export function UserLogin(arg1, arg2) {
   return window['go']['main']['App']['UserLogin'](arg1, arg2);
 }
+
+export function UserLogout() {
+  return window['go']['main']['App']['UserLogout']();
+}
