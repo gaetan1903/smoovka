@@ -39,6 +39,34 @@ func UserIsLoggedIn() bool {
 
 	_, err := utils.VerifyToken(token)
 
-	fmt.Println("ato aii", err)
 	return err == nil
+}
+
+func UserGetAccount() map[string]interface{} {
+	var user models.User
+	token := utils.GetPreference("token")
+	claims, err := utils.VerifyToken(token)
+	if err != nil {
+		return nil
+	}
+
+	db, err := gorm.Open(sqlserver.Open(os.Getenv("DSN_URL")), &gorm.Config{})
+	if err != nil {
+		return nil
+	}
+	db.Where("id = ?", claims["userID"]).First(&user)
+
+	if user.ID == 0 {
+		return nil
+	}
+
+	return map[string]interface{}{
+		"id":          user.ID,
+		"displayName": user.Name,
+		"email":       user.Email,
+		"photoURL": fmt.Sprintf(
+			"/assets/images/avatars/avatar_%d.jpg", user.ID%25+1,
+		),
+	}
+
 }

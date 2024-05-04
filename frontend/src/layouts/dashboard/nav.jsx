@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -15,7 +15,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import { account } from 'src/_mock/account';
+import { accountDefault } from 'src/_mock/account';
 
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
@@ -25,8 +25,12 @@ import navConfig from './config-navigation';
 
 // ----------------------------------------------------------------------
 
+const getCurrentCYear = new Date().getFullYear() === 2024 ? 2024 : `2024-${new Date().getFullYear()}`;
+
+
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
+  const [account, setAccount] = useState(accountDefault);
 
   const upLg = useResponsive('up', 'lg');
 
@@ -34,6 +38,21 @@ export default function Nav({ openNav, onCloseNav }) {
     if (openNav) {
       onCloseNav();
     }
+
+    const getAccount = async () => {
+      try {
+        const response = await window.go.main.App.UserGetAccount();
+        if (response == null) {
+          return;
+        }
+        setAccount(response);
+      } catch (error) {
+        console.error('Error getting account:', error);
+        setAccount(accountDefault);
+      }
+    };
+
+    getAccount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -80,20 +99,20 @@ export default function Nav({ openNav, onCloseNav }) {
         />
 
         <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">Get more?</Typography>
+          <Typography variant="h6">Development Hub</Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            From only $69
+            © {getCurrentCYear}
           </Typography>
         </Box>
 
         <Button
-          href="https://material-ui.com/store/items/minimal-dashboard/"
+          href="https://github.com/gaetan1903/smoovka"
           target="_blank"
           variant="contained"
           color="inherit"
         >
-          Upgrade to Pro
+          v0.0.1.alpha
         </Button>
       </Stack>
     </Box>

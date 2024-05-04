@@ -21,6 +21,7 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
+// AUTHENTICATION
 func (a *App) UserIsLoggedIn() bool {
 	return services.UserIsLoggedIn()
 }
@@ -28,3 +29,12 @@ func (a *App) UserIsLoggedIn() bool {
 func (a *App) UserLogin(login string, password string) bool {
 	return services.UserLogin(login, password)
 }
+
+// ------------------------
+
+// DASHBOARD
+func (a *App) UserGetAccount() map[string]interface{} {
+	return services.UserGetAccount()
+}
+
+// ------------------------

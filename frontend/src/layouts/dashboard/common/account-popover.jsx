@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import { account } from 'src/_mock/account';
+import { accountDefault } from 'src/_mock/account';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +32,25 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const [account, setAccount] = useState(accountDefault);
+
+  useEffect(() => {
+
+    const getAccount = async () => {
+      try {
+        const response = await window.go.main.App.UserGetAccount();
+        if (response == null) {
+          return;
+        }
+        setAccount(response);
+      } catch (error) {
+        console.error('Error getting account:', error);
+        setAccount(accountDefault);
+      }
+    };
+
+    getAccount();
+  }, []);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -87,7 +106,7 @@ export default function AccountPopover() {
           <Typography variant="subtitle2" noWrap>
             {account.displayName}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+          <Typography variant="body2" title={account.email} sx={{ color: 'text.secondary' }} noWrap>
             {account.email}
           </Typography>
         </Box>
