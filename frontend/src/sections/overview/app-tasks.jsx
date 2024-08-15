@@ -26,8 +26,24 @@ export default function AnalyticsTasks({ title, subheader, list, ...other }) {
   };
 
   return (
-    <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
+    <Card {...other} sx={{ maxHeight: '50vh', overflow: 'auto', height: '50vh' }}>
+      <CardHeader title={title} subheader={subheader}
+        sx={{ md: 3 }}
+        action={
+          <IconButton aria-label="addTask">
+            <Iconify
+              icon="zondicons:add-solid"
+              sx={{
+                color: (theme) => theme.palette.primary.main,
+                transition: (theme) =>
+                  theme.transitions.create('all', {
+                    duration: theme.transitions.duration.shortest,
+                  }),
+              }}
+            />
+          </IconButton>
+        }
+      />
 
       {list.map((task) => (
         <TaskItem

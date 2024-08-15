@@ -1,26 +1,33 @@
 import { useState, useEffect } from 'react';
 
+import { Button } from '@mui/material';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+
+import { SessionStatus } from "src/utils/session-status";
 
 import { accountDefault } from 'src/_mock/account';
 
 import AppTasks from '../app-tasks';
 import AppWidgetSummary from '../app-widget-summary';
-import AppConversionRates from '../app-conversion-rates';
+// import AppConversionRates from '../app-conversion-rates';
+
 
 
 // ----------------------------------------------------------------------
 
 export default function AppView() {
   const [account, setAccount] = useState(accountDefault);
+  const [sessionStatus, setSessionStatus] = useState("");
+  // const [updateStatus, setUpdateStatus] = useState(0);
 
+
+  // account name 
   useEffect(() => {
-
     const getAccount = async () => {
       try {
-        const response = await window.go.main.App.UserGetAccount();
+        const response = await window.go.app.App.UserGetAccount();
         if (response == null) {
           return;
         }
@@ -34,11 +41,39 @@ export default function AppView() {
     getAccount();
   }, []);
 
+
+  // status of the session
+  useEffect(() => {
+    const getSessionStatus = async () => {
+      try {
+        const response = await window.go.app.App.UserGetStatus();
+        if (response == null) {
+          return;
+        }
+        setSessionStatus(response);
+      } catch (error) {
+        console.error('Error getting session status:', error);
+        setSessionStatus(SessionStatus.OFFLINE);
+      }
+    };
+
+    getSessionStatus();
+  }, []);
+
   return (
     <Container maxWidth="xl">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Akao i {account.login} iny ô ? 👋
-      </Typography>
+
+      <Grid container spacing={0} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h6" >
+          Akao i {account.login.charAt(0).toUpperCase() + account.login.slice(1)} iny ô ? 👋
+        </Typography>
+
+        <Typography variant="caption" >
+          {sessionStatus} 🚀
+        </Typography>
+
+        <Button onClick={() => setSessionStatus("working")} variant="outlined"  >Demarrer la session</Button>
+      </Grid>
 
       <Grid container spacing={3}>
 
@@ -69,32 +104,11 @@ export default function AppView() {
           />
         </Grid>
 
-
-        <Grid xs={12} md={6} lg={8}>
-          <AppConversionRates
-            title="Heures consomées"
-            subheader="5.2H en moyenne"
-            chart={{
-              series: [
-                { label: 'Lundi', value: 5 },
-                { label: 'Mardi', value: 6 },
-                { label: 'Mercredi', value: 3 },
-                { label: 'Jeudi', value: 1 },
-                { label: 'Vendredi', value: 7 },
-              ],
-            }}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={8}>
+        <Grid xs={12} >
           <AppTasks
             title="Tasks"
             list={[
               { id: '1', name: 'Creation Logo ABM BLIPP' },
-              { id: '2', name: 'Sprint Planning' },
-              { id: '3', name: 'Jira Ticket 2' },
-              { id: '4', name: 'Configuration Bitbucket' },
-              { id: '5', name: 'Daily' },
             ]}
           />
         </Grid>

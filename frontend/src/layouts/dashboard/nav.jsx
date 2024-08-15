@@ -41,7 +41,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
     const getAccount = async () => {
       try {
-        const response = await window.go.main.App.UserGetAccount();
+        const response = await window.go.app.App.UserGetAccount();
         if (response == null) {
           return;
         }

@@ -41,7 +41,7 @@ export default function AccountPopover() {
 
     const getAccount = async () => {
       try {
-        const response = await window.go.main.App.UserGetAccount();
+        const response = await window.go.app.App.UserGetAccount();
         if (response == null) {
           return;
         }
@@ -65,7 +65,7 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     handleClose();
-    await window.go.main.App.UserLogout();
+    await window.go.app.App.UserLogout();
     router.replace('/');
     router.reload();
   }

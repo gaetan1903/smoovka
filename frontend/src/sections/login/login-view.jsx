@@ -41,7 +41,7 @@ export default function LoginView() {
     }
 
     try {
-      const response = await window.go.main.App.UserLogin(login, password);
+      const response = await window.go.app.App.UserLogin(login, password);
       if (response) {
         router.replace('/');
         router.reload();

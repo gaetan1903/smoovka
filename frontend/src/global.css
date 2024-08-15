@@ -1,2 +1,10 @@
 /* scrollbar */
 @import 'simplebar-react/dist/simplebar.min.css';
+
+
+html,
+body {
+    margin: 10;
+    height: 100%;
+    overflow: hidden;
+}

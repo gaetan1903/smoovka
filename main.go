@@ -4,6 +4,7 @@ import (
 	"embed"
 	"log"
 
+	"smoovka/app"
 	"smoovka/services"
 
 	"github.com/joho/godotenv"
@@ -29,19 +30,19 @@ func main() {
 	}
 
 	// Initialize the wails application
-	app := NewApp()
+	appBind := app.NewApp()
 
 	err = wails.Run(&options.App{
 		Title:  "Smoovka DevHub",
 		Width:  1024,
-		Height: 768,
+		Height: 690,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 0},
-		OnStartup:        app.startup,
+		OnStartup:        appBind.Startup,
 		Bind: []interface{}{
-			app,
+			appBind,
 		},
 
 		Frameless: false,
