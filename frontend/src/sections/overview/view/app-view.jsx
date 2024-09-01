@@ -20,8 +20,23 @@ import AppWidgetSummary from '../app-widget-summary';
 export default function AppView() {
   const [account, setAccount] = useState(accountDefault);
   const [sessionStatus, setSessionStatus] = useState("");
-  // const [updateStatus, setUpdateStatus] = useState(0);
+  const [totalCurrentTime, setTotalCurrentTime] = useState(0.0);
 
+
+  const updateSessionStatus = async (status) => {
+    if (status === "offline") {
+      const response = await window.go.app.App.UserStartSession();
+      if (response === true) {
+        setSessionStatus("working");
+      }
+    }
+    else {
+      const response = await window.go.app.App.UserStopSession();
+      if (response === true) {
+        setSessionStatus("offline");
+      }
+    }
+  }
 
   // account name 
   useEffect(() => {
@@ -60,19 +75,46 @@ export default function AppView() {
     getSessionStatus();
   }, []);
 
+
+  // total time of the session
+  useEffect(() => {
+    const getTotalTime = async () => {
+      try {
+        const response = await window.go.app.App.UserCurrentTotalTime();
+        if (response == null) {
+          return;
+        }
+        setTotalCurrentTime(response);
+      } catch (error) {
+        console.error('Error getting total time:', error);
+      }
+    };
+
+    getTotalTime();
+  }, []);
+
   return (
     <Container maxWidth="xl">
 
       <Grid container spacing={0} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h6" >
-          Akao i {account.login.charAt(0).toUpperCase() + account.login.slice(1)} iny ô ? 👋
-        </Typography>
+
+        {sessionStatus === "offline" ?
+          <Typography variant="h6" >
+            Akao i {account.login.charAt(0).toUpperCase() + account.login.slice(1)} iny ô ? 👋
+          </Typography>
+          :
+          <Button variant="contained" color="secondary" >
+            Mettre en Pause
+          </Button>
+        }
 
         <Typography variant="caption" >
           {sessionStatus} 🚀
         </Typography>
 
-        <Button onClick={() => setSessionStatus("working")} variant="outlined"  >Demarrer la session</Button>
+        <Button onClick={() => updateSessionStatus(sessionStatus)} variant="outlined"  >
+          {sessionStatus === "offline" ? "Demarrer la session" : "Arrêter la session"}
+        </Button>
       </Grid>
 
       <Grid container spacing={3}>
@@ -80,7 +122,7 @@ export default function AppView() {
         <Grid xs={12} sm={4} md={4}>
           <AppWidgetSummary
             title="Session en cours"
-            total={3.5}
+            total={totalCurrentTime}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
